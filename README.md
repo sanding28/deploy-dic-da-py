@@ -12,3 +12,5 @@ Setup environmnet
 
 How to run:
 streamlit run dashboard.py
+
+link : https://dashboardpy-test.streamlit.app/
