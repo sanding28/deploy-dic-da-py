@@ -106,7 +106,7 @@ segmented_df = create_segmented_df(merge_rfm)
 # merge_geo = pd.read_csv("merge_geo_df.csv")
 #geo_df = efficiency_by_region(merge_geo_df)
 
-st.subheader("1. Berapa jumlah uang yang dihabiskan pelanggan dengan jumlah value signifikan?")
+st.subheader("1. Berapa jumlah uang yang dihabiskan pelanggan dengan jumlah monetary terbanyak?")
 
 columns = st.columns(3)  
 
@@ -123,33 +123,61 @@ with columns[2]:
         rfm_df.monetary.mean(), "AUD", locale='es_CO')
     st.metric("Average Monetary", value=avg_monetary)
 
-fig, ax = plt.subplots(nrows=3, ncols=1, figsize=(12, 20)) 
+fig, ax = plt.subplots(nrows=3, ncols=1, figsize=(12, 22)) 
 
-sns.barplot(x="recency", y="customer_id", data=rfm_df.sort_values(by="recency", ascending=True).head(5), ax=ax[0])
-ax[0].set_ylabel(None)
-ax[0].set_xlabel("Customer_id")
+sns.barplot(x="recency", y="customer_id", data=rfm_df.sort_values(by="recency", ascending=False).head(5), ax=ax[0])
+ax[0].set_ylabel("Customer_id")
+ax[0].set_xlabel("recency")
 ax[0].set_title("By recency", loc="center", fontsize=18)
 ax[0].tick_params(axis='y', labelsize=12)
 ax[0].tick_params(axis='x', labelsize=12)
 
 sns.barplot(x="frequency", y="customer_id", data=rfm_df.sort_values(by="frequency", ascending=False).head(5), ax=ax[1])
-ax[1].set_ylabel(None)
-ax[1].set_xlabel("Customer_id")
+ax[1].set_ylabel("Customer_id")
+ax[1].set_xlabel("frequency")
 ax[1].set_title("By Frequency", loc="center", fontsize=18)
 ax[1].tick_params(axis='y', labelsize=12)
 ax[1].tick_params(axis='x', labelsize=12)
 
 sns.barplot(x="monetary", y="customer_id", data=rfm_df.sort_values(by="monetary", ascending=False).head(5), ax=ax[2])
-ax[2].set_ylabel(None)
-ax[2].set_xlabel("Customer_id")
+ax[2].set_ylabel("Customer_id")
+ax[2].set_xlabel("monetary")
 ax[2].set_title("By monetary", loc="center", fontsize=18)
 ax[2].tick_params(axis='y', labelsize=12)
 ax[2].tick_params(axis='x', labelsize=12)
 
 st.pyplot(fig)
 
+with st.expander("Analisis"):
+    st.write(
+        """
+        - Customer ID 1617b135775 mendekati 14,000.
+        - Customer ID ec5b2ba62e5 mendekati 7,000.
+        - Customer ID c6e2731c5b3 mendekati 6,500.
+        - Customer ID f48d464a0ba mendekati 6,500.
+        - Customer ID 3fd6777bbce mendekati 6,000.
+
+        5 Pelanggan di atas adalah pelanggan teratas yang telah mengahibiskan uang secara signifikan dalam transaksi di e-commerce ini.
+         """
+    )
+
 st.subheader("2. Bagaimana segmentasi pelanggan dari e-commerce ini?")
 visualize_customer_segments(segmented_df)
+
+with st.expander("Analisis"):
+    st.write(
+        """
+        - Lost Customer (1,000 pelanggan): Ini adalah pelanggan yang sudah tidak aktif dalam bisnis Anda dan mungkin perlu usaha lebih untuk mengembalikan mereka.
+        - Low Value Customer (40,000 pelanggan): Ini adalah pelanggan yang menghabiskan uang dalam jumlah yang lebih rendah dibandingkan dengan segmen lainnya. Mungkin diperlukan strategi untuk meningkatkan nilai transaksi mereka.
+        - Medium Value Customer (35,000 pelanggan): Ini adalah pelanggan yang memiliki nilai transaksi menengah. Anda dapat berfokus untuk menjaga dan meningkatkan keterlibatan mereka.
+        - High Value Customer (16,000 pelanggan): Ini adalah pelanggan yang menghabiskan uang dengan jumlah yang lebih tinggi dibandingkan dengan segmen lainnya. Perlu diberikan pelayanan dan penawaran istimewa kepada mereka.
+        - Top Customer (5,000 pelanggan): Ini adalah pelanggan yang merupakan pelanggan andalan dengan nilai transaksi tertinggi. Mereka dapat menjadi sumber pendapatan utama, jadi perlu diberikan perhatian khusus dan pelayanan terbaik kepada mereka.
+
+
+        Kesimpulannya, perlu strategi pemasaran dan pelayanan yang berbeda-beda untuk setiap segmen pelanggan agar dapat memaksimalkan keuntungan dari setiap segmen.
+
+         """
+    )
 
 # st.subheader("3. Kota mana dengan pengiriman tercepat?")
 # plt.figure(figsize=(6, 6))
